@@ -32,7 +32,7 @@ This toolkit covers backup/restore, media tools, security helpers, QR utilities,
 ## Quick Start
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/rifatsoftdev/Script.git
 cd Script
 chmod +x *
 ```
