@@ -1,0 +1,48 @@
+#!/usr/bin/env python3.10
+
+import os
+import sys
+
+
+class File2Binary:
+    def file_to_binary(self, input_file, output_file):
+        with open(input_file, "rb") as f_in, open(output_file, "w") as f_out:
+            byte = f_in.read(1)
+            while byte:
+                binary_str = format(byte[0], '08b')
+                f_out.write(binary_str + ' ')
+                byte = f_in.read(1)
+
+    def binary_to_file(self, input_file, output_file):
+        with open(input_file, "r") as f_in, open(output_file, "wb") as f_out:
+            binary_data = f_in.read().split()
+
+            for byte in binary_data:
+                f_out.write(int(byte, 2).to_bytes(1, byteorder='big'))
+
+
+
+if __name__ == "__main__":
+    file2binary = File2Binary()
+
+    print("1. Binary to File")
+    print("2. File to Binary")
+    choice = input("Enter your choice (1 or 2): ")
+
+    if choice == "1":
+        file_path = input("Enter the file path: ")
+        dir_path = os.path.dirname(file_path)
+        base_name = os.path.splitext(os.path.basename(file_path))[0]
+        output_path = os.path.join(dir_path, base_name)
+        file2binary.binary_to_file(file_path, output_path)
+
+
+    elif choice == "2":
+        file_path = input("Enter the file path: ")
+        dir_path = os.path.dirname(file_path)
+        base_name = os.path.basename(file_path)
+        output_path = os.path.join(dir_path, base_name + ".txt")
+        file2binary.file_to_binary(file_path, output_path)
+        
+    else:
+        print("Invalid choice. Please enter 1 or 2.")

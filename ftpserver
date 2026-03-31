@@ -1,0 +1,50 @@
+#!/usr/bin/env python3.10
+
+from pyftpdlib.authorizers import DummyAuthorizer
+from pyftpdlib.handlers import FTPHandler
+from pyftpdlib.servers import FTPServer
+import os
+import socket
+import getpass
+
+
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+    except Exception as e:
+        ip = "127.0.0.1"
+    finally:
+        s.close()
+    return ip
+
+# FTP Access Info
+username = input("Enter FTP Username: ")
+password = getpass.getpass("Enter FTP Password: ")
+port = int(input("Enter Port (default 2121): ") or 2121)
+folder_path = os.path.expanduser(input("Enter Shared Path: "))
+
+# Ensure directory exists
+os.makedirs(folder_path, exist_ok=True)
+
+# Authorizer
+authorizer = DummyAuthorizer()
+authorizer.add_user(username, password, homedir=folder_path, perm="elradfmwMT")
+os.chmod(folder_path, 0o777)
+
+# FTP Handler
+handler = FTPHandler
+handler.authorizer = authorizer
+
+# Get local IP address
+ip = get_ip()
+
+print(f"\n🚀 FTP Server Started!")
+print(f"📁 Shared Path: {folder_path}")
+print(f"🌐 Connect to: ftp://{ip}:{port}")
+print(f"🔑 Username: {username} | Password: {password}")
+
+# ✅ Start Server
+server = FTPServer((ip, port), handler)
+server.serve_forever()

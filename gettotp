@@ -1,0 +1,23 @@
+#!/usr/bin/env python3.10
+
+import pyotp
+import time
+import sys
+
+def get_totp_code(secret: str) -> str:
+    totp = pyotp.TOTP(secret)
+    return totp.now()
+
+if __name__ == "__main__":
+    secret = input("Enter your TOTP secret: ")
+
+    try:
+        while True:
+            code = get_totp_code(secret)
+            time_remaining = 30 - int(time.time()) % 30  # Time remaining in the 30-second cycle
+            # Showing code and time on the same line
+            sys.stdout.write(f"\rTOTP: {code} | Expires in: {time_remaining:02d}s ")
+            sys.stdout.flush()
+            time.sleep(1)  # Updating every second
+    except KeyboardInterrupt:
+        print("\nExiting...")

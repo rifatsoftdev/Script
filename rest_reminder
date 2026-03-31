@@ -1,0 +1,29 @@
+#!/bin/bash
+
+count=0
+
+# sleep for 10 seconds to allow system to settle after login
+sleep 10
+
+# Welcome sound
+mpv "$HOME/MyLinux/Audio/welcome.mp3"
+
+while true
+do
+    # Wait 20 minutes
+    sleep 1200
+
+    count=$((count + 1))
+
+    if (( count % 3 == 0 )); then
+        # Long break every 1 hour
+        mpv "$HOME/MyLinux/Audio/one_hour.mp3"
+        sleep 120
+        mpv "$HOME/MyLinux/Audio/task_completed.mp3"
+    else
+        # Short break
+        mpv "$HOME/MyLinux/Audio/twenty_minite.mp3"
+        sleep 20
+        mpv "$HOME/MyLinux/Audio/task_completed.mp3"
+    fi
+done

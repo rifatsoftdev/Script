@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# ==============================
+# Linux Clean Script - clean.sh
+# ==============================
+
+echo "Starting system cleanup..."
+
+# 1. Clean DNF/Yum cache
+echo "Cleaning package manager cache..."
+sudo dnf clean all
+sudo dnf autoremove -y
+
+# 2. Clean system journal logs older than 7 days
+echo "Cleaning old system logs..."
+sudo journalctl --vacuum-time=7d
+
+# 3. Clean temporary files
+echo "Cleaning /tmp and /var/tmp..."
+sudo rm -rf /tmp/*
+sudo rm -rf /var/tmp/*
+
+# 4. Clean user cache
+echo "Cleaning user cache..."
+rm -rf ~/.cache/*
+
+# 5. Clean thumbnails
+echo "Cleaning thumbnails..."
+rm -rf ~/.thumbnails/*
+rm -rf ~/.cache/thumbnails/*
+
+# 6. Optional: Clean browser caches (Firefox & Chrome)
+echo "Cleaning browser caches..."
+rm -rf ~/.mozilla/firefox/*.default-release/cache2/*
+rm -rf ~/.cache/google-chrome/*
+rm -rf ~/.cache/chromium/*
+
+echo "System cleanup completed!"
+

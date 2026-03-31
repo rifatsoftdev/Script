@@ -1,0 +1,58 @@
+# -----------------------
+# Python
+# -----------------------
+__pycache__/**
+*.pyc
+*.pyo
+*.pyd
+.venv/**
+venv/**
+myenv/**
+.env/
+.envrc
+
+# -----------------------
+# Node.js / JavaScript
+# -----------------------
+node_modules/**
+npm-debug.log*
+yarn-error.log*
+.pnpm-store/**
+
+# -----------------------
+# PHP / Laravel
+# -----------------------
+vendor/**
+storage/framework/**
+storage/logs/**
+bootstrap/cache/**
+.env
+.env.example
+
+# -----------------------
+# Build / Temp files
+# -----------------------
+build/**
+dist/**
+tmp/**
+.cache/**
+coverage/**
+*.o
+*.class
+*.exe
+*.dll
+*.gradle
+
+# -----------------------
+# OS / Editor specific
+# -----------------------
+.DS_Store
+Thumbs.db
+.idea/**
+.vscode/**
+*.swp
+*.swo
+
+
+.git/**
+*.AppImage

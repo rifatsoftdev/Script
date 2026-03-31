@@ -1,0 +1,42 @@
+#!/bin/bash
+
+BASE_PATH="$HOME"
+# BASE_PATH="/storage/8991-1600"
+
+# folder list
+FOLDERS=(
+    "${BASE_PATH}/Desktop"
+    "${BASE_PATH}/Documents"
+    "${BASE_PATH}/Downloads"
+    "${BASE_PATH}/Music"
+    "${BASE_PATH}/MyLinux"
+    "${BASE_PATH}/Pictures"
+    "${BASE_PATH}/Videos"
+    "${BASE_PATH}/Programming"
+    "${BASE_PATH}/Projects"
+    "${BASE_PATH}/Script"
+    "${BASE_PATH}/devlibs"
+    "${BASE_PATH}/Ebook"
+)
+
+# Google Drive remote folder
+REMOTE="gdrive:Backup_Laptop"
+
+echo "==============================="
+echo "Starting restore at $(date)"
+echo "==============================="
+
+for FOLDER in "${FOLDERS[@]}"; do
+    BASENAME=$(basename "$FOLDER")
+    echo "Restoring $REMOTE/$BASENAME → $FOLDER ..."
+    
+    # If the folder does not exist, create it first.
+    mkdir -p "$FOLDER"
+
+    # Will sync, copy from Google Drive to local
+    rclone copy "$REMOTE/$BASENAME" "$FOLDER" --progress
+done
+
+echo "==============================="
+echo "Restore completed at $(date)"
+echo "==============================="

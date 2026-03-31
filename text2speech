@@ -1,0 +1,24 @@
+#!/usr/bin/env python3.10
+
+import datetime
+import os
+from gtts import gTTS
+
+# Expand ~ to full home directory
+PATH = os.path.expanduser("~/Music/Voice")
+
+# Make sure the folder exists
+os.makedirs(PATH, exist_ok=True)
+
+def text_to_speech(text, lang='en'):
+    try:
+        tts = gTTS(text=text, lang=lang)
+        date_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        filename = os.path.join(PATH, f"voice_{lang}_{date_time}.mp3")
+        tts.save(filename)
+        print(f"Audio saved as {filename}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+if __name__ == "__main__":
+    text_to_speech(input("Enter text to convert to speech: \n"))

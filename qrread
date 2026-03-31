@@ -1,0 +1,27 @@
+#!/usr/bin/env python3.10
+
+from PIL import Image
+from pyzbar.pyzbar import decode
+
+def read_qr_code(image_path):
+    """Decodes a QR code from an image file."""
+    try:
+        # Open the image file
+        img = Image.open(image_path)
+        # Decode the QR code
+        decoded_objects = decode(img)
+
+        if decoded_objects:
+            for obj in decoded_objects:
+                # Print the decoded data
+                print("Data:", obj.data.decode('utf-8'))
+        else:
+            print("No QR code detected.")
+    except FileNotFoundError:
+        print(f"Error: Image file not found at {image_path}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+# Example usage:
+if __name__ == "__main__":
+    read_qr_code(input("Enter Qr Code Path : "))

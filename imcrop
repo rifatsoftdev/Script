@@ -1,0 +1,34 @@
+#!/usr/bin/env python3.10
+
+from PIL import Image, ImageDraw
+
+def rounded_image(input_path, output_path, radius):
+    img = Image.open(input_path).convert("RGBA")
+
+    width, height = img.size
+
+    # create mask
+    mask = Image.new("L", (width, height), 0)
+    draw = ImageDraw.Draw(mask)
+    draw.rounded_rectangle(
+        [(0, 0), (width, height)],
+        radius=radius,
+        fill=255
+    )
+
+    # mask apply
+    rounded = Image.new("RGBA", (width, height))
+    rounded.paste(img, (0, 0), mask)
+
+    rounded.save(output_path, format="PNG")
+
+if __name__ == "__main__":
+    input_path = input("Enter Image Path : ")
+    output_path = input("Enter Output Path : ")
+    radius = int(input("Enter Radius to Crop : "))
+
+    rounded_image(
+        input_path=input_path,
+        output_path=output_path,
+        radius=radius
+    )

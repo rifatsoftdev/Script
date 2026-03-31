@@ -1,0 +1,69 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    echo "Usage:"
+    echo "download video <video_url>"
+    echo "download audio <video_url>"
+    exit 1
+fi
+
+DOWNLOAD_DIR="$HOME/Temporary/Downloads"
+# DOWNLOAD_DIR="/run/media/rifatsoftdev/BAA8-6493/Videos"
+mkdir -p "$DOWNLOAD_DIR"
+
+# Check if first argument is "mp3"
+if [ "$1" = "audio" ]; then
+    URL="$2"
+
+    if [ -z "$URL" ]; then
+        echo "Please provide a URL for audio download."
+        exit 1
+    fi
+
+    echo "Trying to download as MP3..."
+
+    yt-dlp \
+    --cookies-from-browser chrome \
+    -f bestaudio \
+    --extract-audio \
+    --audio-format mp3 \
+    --audio-quality 0 \
+    -o "$DOWNLOAD_DIR/%(title)s.%(ext)s" \
+    "$URL"
+
+    # Check exit status
+    if [ $? -ne 0 ]; then
+        echo "MP3 conversion failed. Falling back to M4A..."
+
+        yt-dlp \
+        --cookies-from-browser chrome \
+        -f bestaudio[ext=m4a]/bestaudio \
+        --extract-audio \
+        --audio-format m4a \
+        -o "$DOWNLOAD_DIR/%(title)s.%(ext)s" \
+        "$URL"
+    fi
+
+    echo "Saved to: $DOWNLOAD_DIR"
+
+elif [ "$1" = "video" ]; then
+    URL="$2"
+
+    echo "Downloading best quality video (mp4)..."
+
+    yt-dlp \
+    --cookies-from-browser chrome \
+    --remote-components ejs:github \
+    -f "bv*+ba/b" \
+    -o "$DOWNLOAD_DIR/%(title)s.%(ext)s" \
+    --merge-output-format mp4 \
+    --embed-metadata \
+    --embed-thumbnail \
+    "$URL"
+
+else
+    echo "Invalid option. Use 'video' or 'audio'."
+    exit 1
+fi
+
+echo "Saved to: $DOWNLOAD_DIR"

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+BASE_PATH="$HOME"
+# BASE_PATH="/storage/8991-1600/"
+
+# folder list
+FOLDERS=(
+    "${BASE_PATH}/Desktop"
+    "${BASE_PATH}/Documents"
+    "${BASE_PATH}/Downloads"
+    "${BASE_PATH}/Music"
+    "${BASE_PATH}/MyLinux"
+    "${BASE_PATH}/Pictures"
+    "${BASE_PATH}/Videos"
+    "${BASE_PATH}/Programming"
+    "${BASE_PATH}/Projects"
+    "${BASE_PATH}/Script"
+    "${BASE_PATH}/devlibs"
+    "${BASE_PATH}/Ebook"
+)
+
+# Google Drive remote folder
+REMOTE="gdrive:Backup_Laptop"
+
+# all folder sync or copy
+for FOLDER in "${FOLDERS[@]}"; do
+    echo "Backing up $FOLDER ..."
+    # copy, sync
+    rclone sync "$FOLDER" "$REMOTE/$(basename $FOLDER)" --progress \
+        --exclude-from "/home/rifatsoftdev/MyLinux/Script/.rcloneignore"
+done
+
+echo ""
+echo "=================="
+echo "All backups done!"
+echo "=================="

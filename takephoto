@@ -1,0 +1,28 @@
+#!/usr/bin/env python3.10
+
+import cv2
+import datetime
+import os
+
+PATH = os.path.expanduser("~/MyLinux/Photos")
+os.makedirs(PATH, exist_ok=True)
+
+cap = cv2.VideoCapture(0)
+
+for _ in range(10):
+    cap.read()
+
+ret, frame = cap.read()
+
+if ret:
+    frame = cv2.flip(frame, 1)   # fix left-right mirror
+
+    date_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    file = f"{PATH}/system_security_{date_time}.jpg"
+
+    cv2.imwrite(file, frame)
+    print(f"Photo saved as {file}")
+else:
+    print("Failed to capture photo")
+
+cap.release()

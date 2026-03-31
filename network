@@ -1,0 +1,83 @@
+#!/usr/bin/env python3.10
+
+import speedtest
+import requests
+import socket
+import psutil
+
+
+# Function to get the public IP address
+def get_public_ip():
+    try:
+        # Use an external API that returns the public IP address as plain text
+        response = requests.get('https://api.ipify.org')
+        # Check if the request was successful
+        if response.status_code == 200:
+            return response.text.strip()
+        else:
+            return None
+    except requests.exceptions.RequestException as e:
+        return None
+
+
+# Function to get the local IP address
+def get_local_ip():
+    addrs = psutil.net_if_addrs()
+
+    for iface, addr_list in addrs.items():
+        if iface == "lo" or iface.startswith("lo"):
+            continue
+
+        ipv4 = None
+        ipv6 = None
+
+        for addr in addr_list:
+            if addr.family == socket.AF_INET:
+                ipv4 = addr.address
+            elif addr.family == socket.AF_INET6:
+                ipv6 = addr.address.split('%')[0]
+
+        if ipv4 or ipv6:
+            return (ipv4, ipv6)
+
+    return (None, None)
+
+
+# Function to perform the speed test and print results
+def speed_test():
+    try:
+        test = speedtest.Speedtest()
+
+        # List all servers to check if it's retrieving them
+        # servers = test.get_servers()
+        # print("Available Servers:", servers)
+        test.get_best_server()  # This automatically selects the best server
+
+        # Download Speed
+        down_speed = test.download()
+        dow_speed = round(down_speed / 10**6, 2)
+
+        # Upload Speed
+        uplo_speed = test.upload()
+        up_speed = round(uplo_speed / 10**6, 2)
+
+        # Ping Time
+        ping = test.results.ping
+
+        return (dow_speed, up_speed, ping)
+
+    except Exception as e:
+        return (None, None, None)
+
+
+# Run the speed test when the script is executed
+if __name__ == "__main__":
+    speed = speed_test()
+    ip = get_local_ip()
+
+    print(f"Public IP      : {get_public_ip()}")
+    print(f"Local IPv4     : {ip[0]}")
+    print(f"Local IPv6     : {ip[1]}")
+    print(f"Download Speed : {speed[0]} Mbps")
+    print(f"Upload Speed   : {speed[1]} Mbps")
+    print(f"Ping           : {speed[2]} ms")
